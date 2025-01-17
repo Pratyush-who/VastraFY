@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vastrafy/screens/products_overview_screen.dart';
+import 'screens/product_detail_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -15,7 +16,16 @@ class MainApp extends StatelessWidget {
       title: 'VastraFY',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.blue,
+        ).copyWith(
+          secondary: Colors.deepOrange,
+        ),
+        fontFamily: 'Lato',
       ),
+      routes: {
+        ProductDetailScreen.routeName:(ctx)=> ProductDetailScreen(),
+        },
       home: ProductsOverviewScreen(),
     );
   }

@@ -45,10 +45,11 @@ class ProductsOverviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('VastraFY'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: GridView.builder(
         itemCount: loadedProduct.length,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(7),
         itemBuilder: (ctx, i) => ProductItem(
           loadedProduct[i].id,
           loadedProduct[i].title,
