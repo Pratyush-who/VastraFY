@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_launcher_icons: ^0.14.2
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -31,4 +32,5 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/applogo.png"
+  image_path_android: "assets/images/applogo.jpg"
+  image_path_ios: "assets/images/applogo.jpg"
