@@ -1,22 +1,36 @@
 import 'package:flutter/foundation.dart';
 
-class cartItem {
+class CartItem {
   final String id;
   final String title;
   final int qty;
   final double price;
 
-  cartItem(
-      {required this.id,
-      required this.price,
-      required this.qty,
-      required this.title});
+  CartItem({
+    required this.id,
+    required this.price,
+    required this.qty,
+    required this.title,
+  });
 }
 
 class Cart with ChangeNotifier {
-  Map<String, cartItem> _items = {};
-  Map<String, cartItem> get items {
+  Map<String, CartItem> _items = {};
+
+  Map<String, CartItem> get items {
     return {..._items};
+  }
+
+  int get itemCount {
+    return _items.length;
+  }
+
+  double get total {
+    var total = 0.0;
+    _items.forEach((key, value) {
+      total += value.price * value.qty;  // Fixed reference to the item properties
+    });
+    return total;
   }
 
   void addItem(
@@ -27,19 +41,18 @@ class Cart with ChangeNotifier {
     if (_items.containsKey(id)) {
       _items.update(
           id,
-          (existingcartItem) => cartItem(
-              id: existingcartItem.id,
-              price: existingcartItem.price,
-              qty: existingcartItem.qty + 1,
-              title: existingcartItem.title));
+          (existingCartItem) => CartItem(
+              id: existingCartItem.id,
+              price: existingCartItem.price,
+              qty: existingCartItem.qty + 1,
+              title: existingCartItem.title));
     } else {
       _items.putIfAbsent(
-          id,
-          () => cartItem(
-              id: DateTime.now().toString(),
-              price: price,
-              title: title,
-              qty: 1));
+        id,
+        () => CartItem(
+            id: DateTime.now().toString(), price: price, title: title, qty: 1),
+      );
     }
+    notifyListeners();
   }
 }
