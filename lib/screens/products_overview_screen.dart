@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vastrafy/providers/cart.dart';
 import 'package:vastrafy/screens/cart_screen.dart';
+import 'package:vastrafy/widget/app_drawer.dart';
 import 'package:vastrafy/widget/products_grid.dart';
 // import 'package:vastrafy/widget/badge.dart';
 
@@ -62,6 +63,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
+      drawer: AppDrawer(),
       body: ProductsGrid(_showOnlyFavorites),
     );
   }
