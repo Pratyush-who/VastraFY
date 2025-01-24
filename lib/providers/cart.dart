@@ -28,7 +28,8 @@ class Cart with ChangeNotifier {
   double get total {
     var total = 0.0;
     _items.forEach((key, value) {
-      total += value.price * value.qty;  // Fixed reference to the item properties
+      total +=
+          value.price * value.qty; // Fixed reference to the item properties
     });
     return total;
   }
@@ -53,6 +54,16 @@ class Cart with ChangeNotifier {
             id: DateTime.now().toString(), price: price, title: title, qty: 1),
       );
     }
+    notifyListeners();
+  }
+
+  void removeItem(String ProductId) {
+    _items.remove(ProductId);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _items = {};
     notifyListeners();
   }
 }

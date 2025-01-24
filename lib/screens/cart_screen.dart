@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vastrafy/providers/cart.dart';
+import 'package:vastrafy/providers/cart.dart' show Cart;
+import 'package:vastrafy/providers/orders.dart';
+import 'package:vastrafy/widget/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
@@ -35,10 +37,33 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  TextButton(onPressed: (){}, child: Text('Order Now'),
+                  TextButton(
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false)
+                          .addOrder(cart.items.values.toList(), cart.total);
+                      cart.clearCart();
+                    },
+                    child: Text('Order Now'),
                   ),
                 ],
               ),
+            ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.items.length,
+              itemBuilder: (ctx, i) {
+                final cartItem = cart.items.values.toList()[i];
+                return CartItem(
+                  cartItem.id,
+                  cartItem.title,
+                  cartItem.price,
+                  cartItem.qty,
+                );
+              },
             ),
           )
         ],

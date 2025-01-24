@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vastrafy/providers/cart.dart';
+import 'package:vastrafy/providers/orders.dart';
 import 'package:vastrafy/screens/cart_screen.dart';
 import 'package:vastrafy/screens/products_overview_screen.dart';
 import 'screens/product_detail_screen.dart';
@@ -23,6 +24,11 @@ class MainApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Cart(),
         ),
+        ChangeNotifierProvider(
+          create: (context) {
+            Orders();
+          },
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -38,7 +44,7 @@ class MainApp extends StatelessWidget {
         ),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routeName:(ctx)=> CartScreen(),
+          CartScreen.routeName: (ctx) => CartScreen(),
         },
         home: ProductsOverviewScreen(),
       ),
