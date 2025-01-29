@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vastrafy/screens/orders_screen.dart';
+import 'package:vastrafy/screens/user_product_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -18,7 +19,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.shop),
             title: Text('Shop'),
             onTap: () {
-              Navigator.of(context).pushNamed('/OrdersScreen');
+              Navigator.of(context).pushReplacementNamed('/OrdersScreen');
             },
           ),
           Divider(),
@@ -26,7 +27,15 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.paypal_outlined),
             title: Text('Payment'),
             onTap: () {
-              Navigator.of(context).pushNamed('/OrdersScreen');
+              Navigator.of(context).pushReplacementNamed('/OrdersScreen');
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.manage_accounts),
+            title: Text('Manage Items'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/user-product');
             },
           ),
         ],
