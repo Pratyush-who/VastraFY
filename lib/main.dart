@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vastrafy/providers/cart.dart';
 import 'package:vastrafy/providers/orders.dart';
 import 'package:vastrafy/screens/cart_screen.dart';
+import 'package:vastrafy/screens/edit_product_screen.dart';
 import 'package:vastrafy/screens/orders_screen.dart';
 import 'package:vastrafy/screens/products_overview_screen.dart';
 import 'package:vastrafy/screens/user_product_screen.dart';
@@ -48,6 +49,7 @@ class MainApp extends StatelessWidget {
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(),
           UserProductScreen.routeName:(ctx)=> UserProductScreen(),
+          EditProductScreen.routeName:(ctx)=> EditProductScreen(),
         },
         home: ProductsOverviewScreen(),
       ),

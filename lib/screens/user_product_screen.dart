@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vastrafy/providers/products.dart';
+import 'package:vastrafy/screens/edit_product_screen.dart';
 import 'package:vastrafy/widget/app_drawer.dart';
 import 'package:vastrafy/widget/user_product_item.dart';
 
@@ -15,14 +16,20 @@ class UserProductScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Your Products'),
         backgroundColor: Colors.purpleAccent,
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.add))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditProductScreen.routeName);
+              },
+              icon: Icon(Icons.add))
+        ],
       ),
       drawer: AppDrawer(),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         child: ListView.builder(
           itemBuilder: (_, i) => UserProductItem(
-              prodData.items[i].title, Divider(), prodData.items[i].imageUrl),
+              prodData.items[i].title, prodData.items[i].imageUrl),
           itemCount: prodData.items.length,
         ),
       ),
