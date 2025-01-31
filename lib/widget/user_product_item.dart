@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vastrafy/screens/edit_product_screen.dart';
 
 class UserProductItem extends StatelessWidget {
   final String title;
   final String imgUrl;
-  UserProductItem(this.title, this.imgUrl);
+  final String id;
+  UserProductItem(this.id,this.title, this.imgUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +18,15 @@ class UserProductItem extends StatelessWidget {
         width: 100,
         child: Row(
           children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.edit),),
-            IconButton(onPressed: () {}, icon: Icon(Icons.delete_forever),color: Colors.redAccent[500],),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {Navigator.of(context).pushNamed(EditProductScreen.routeName, arguments:id );},
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.delete_forever),
+              color: Colors.redAccent[500],
+            ),
           ],
         ),
       ),

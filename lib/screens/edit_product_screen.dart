@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vastrafy/providers/product.dart';
+import 'package:vastrafy/providers/products.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({super.key});
@@ -13,18 +16,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _descNode = FocusNode();
   final _imgUrlController = TextEditingController();
   final _imgUrlFocusNode = FocusNode();
+  final _formSubmit = GlobalKey<FormState>();
+  var _editedProd =
+      Product(id: '', title: '', description: '', imageUrl: '', price: 0);
+
+  var isInit = true;
 
   @override
   void initState() {
     _imgUrlFocusNode.addListener(_updateImgUrl);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) ;
+    final productId = ModalRoute.of(context)?.settings.arguments as String;
+    super.didChangeDependencies();
   }
 
   void _updateImgUrl() {
-if(!_imgUrlFocusNode.hasFocus){
-      setState(() {
-        
-      });
+    if (!_imgUrlFocusNode.hasFocus) {
+      setState(() {});
     }
+  }
+
+  void _submitForm() {
+    final isValid = _formSubmit.currentState?.validate();
+    if (!isValid!) {
+      return;
+    }
+    _formSubmit.currentState?.save();
+
+    setState(() {});
+
+    Provider.of<Products>(context, listen: false).addProduct(_editedProd);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -42,8 +69,17 @@ if(!_imgUrlFocusNode.hasFocus){
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Products'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              _submitForm();
+            },
+          ),
+        ],
       ),
       body: Form(
+        key: _formSubmit,
         child: ListView(
           padding: EdgeInsets.all(16), // Added padding to ListView
           children: [
@@ -53,8 +89,23 @@ if(!_imgUrlFocusNode.hasFocus){
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_focusNode);
                 },
+                onSaved: (value) {
+                  _editedProd = Product(
+                    id: '',
+                    title: value!,
+                    description: _editedProd.description,
+                    imageUrl: _editedProd.imageUrl,
+                    price: _editedProd.price,
+                  );
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please return ';
+                  }
+                  return null;
+                },
                 decoration: InputDecoration(
-                  label: Text('Title'),
+                  labelText: 'Title',
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey),
@@ -76,6 +127,25 @@ if(!_imgUrlFocusNode.hasFocus){
                 focusNode: _focusNode,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descNode);
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a price';
+                  }
+                  if (double.tryParse(value) == null ||
+                      double.parse(value) <= 0) {
+                    return 'Enter a valid price';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _editedProd = Product(
+                    id: '',
+                    title: _editedProd.title,
+                    description: _editedProd.description,
+                    imageUrl: _editedProd.imageUrl,
+                    price: double.parse(value!),
+                  );
                 },
                 decoration: InputDecoration(
                   label: Text('Price'),
@@ -100,6 +170,21 @@ if(!_imgUrlFocusNode.hasFocus){
                 keyboardType: TextInputType.multiline,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_focusNode);
+                },
+                onSaved: (value) {
+                  _editedProd = Product(
+                    id: _editedProd.id,
+                    title: _editedProd.title,
+                    description: value!,
+                    imageUrl: _editedProd.imageUrl,
+                    price: _editedProd.price,
+                  );
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please return ';
+                  }
+                  return null;
                 },
                 maxLines: 3,
                 decoration: InputDecoration(
@@ -151,6 +236,16 @@ if(!_imgUrlFocusNode.hasFocus){
                       textInputAction: TextInputAction.done,
                       controller: _imgUrlController,
                       focusNode: _imgUrlFocusNode,
+                      onFieldSubmitted: (_) => _submitForm(),
+                      onSaved: (value) {
+                        _editedProd = Product(
+                          id: _editedProd.id,
+                          title: _editedProd.title,
+                          description: _editedProd.description,
+                          imageUrl: value!,
+                          price: _editedProd.price,
+                        );
+                      },
                     ),
                   )
                 ],
