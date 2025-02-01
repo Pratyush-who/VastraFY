@@ -20,6 +20,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProd =
       Product(id: '', title: '', description: '', imageUrl: '', price: 0);
 
+  var initValues = {
+    'title': '',
+    'price': '',
+    'description': '',
+    'imgUrl': '',
+  };
+
   var isInit = true;
 
   @override
@@ -30,8 +37,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   void didChangeDependencies() {
-    if (isInit) ;
-    final productId = ModalRoute.of(context)?.settings.arguments as String;
+    if (isInit) {
+      final productId = ModalRoute.of(context)?.settings.arguments as String?;
+      if (productId != null) {
+        _editedProd =
+            Provider.of<Products>(context, listen: false).findById(productId);
+        initValues = {
+          'title': _editedProd.title,
+          'description': _editedProd.description,
+          'price': _editedProd.price.toString(),
+          // 'imgUrl': _editedProd.imageUrl,
+          'imgUrl': '',
+        };
+        _imgUrlController.text = _editedProd.imageUrl;
+      }
+    }
+    isInit = false;
     super.didChangeDependencies();
   }
 
@@ -47,10 +68,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formSubmit.currentState?.save();
+    if (_editedProd.id != null) {
+      Provider.of<Products>(context, listen: false)
+          .updateProd(_editedProd.id, _editedProd);
+    } else {
+      Provider.of<Products>(context, listen: false).addProduct(_editedProd);
+    }
 
     setState(() {});
 
-    Provider.of<Products>(context, listen: false).addProduct(_editedProd);
     Navigator.of(context).pop();
   }
 
@@ -86,16 +112,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: TextFormField(
+                initialValue: initValues['title'],
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_focusNode);
                 },
                 onSaved: (value) {
                   _editedProd = Product(
-                    id: '',
                     title: value!,
                     description: _editedProd.description,
                     imageUrl: _editedProd.imageUrl,
                     price: _editedProd.price,
+                    id: _editedProd.id,
+                    isFavorite: _editedProd.isFavorite,
                   );
                 },
                 validator: (value) {
@@ -123,6 +151,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: TextFormField(
+                initialValue: initValues['title'],
                 keyboardType: TextInputType.number,
                 focusNode: _focusNode,
                 onFieldSubmitted: (_) {
@@ -140,7 +169,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
                 onSaved: (value) {
                   _editedProd = Product(
-                    id: '',
+                    id: _editedProd.id,
+                    isFavorite: _editedProd.isFavorite,
                     title: _editedProd.title,
                     description: _editedProd.description,
                     imageUrl: _editedProd.imageUrl,
@@ -166,6 +196,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: TextFormField(
+                initialValue: initValues['title'],
                 focusNode: _descNode,
                 keyboardType: TextInputType.multiline,
                 onFieldSubmitted: (_) {
@@ -174,6 +205,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onSaved: (value) {
                   _editedProd = Product(
                     id: _editedProd.id,
+                    isFavorite: _editedProd.isFavorite,
                     title: _editedProd.title,
                     description: value!,
                     imageUrl: _editedProd.imageUrl,
@@ -214,8 +246,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     child: _imgUrlController.text.isEmpty
                         ? Text('Paste a Url plx')
                         : FittedBox(
+                            fit: BoxFit
+                                .contain, // Ensure the image fits inside the box without overflowing
                             child: Image.network(_imgUrlController.text),
-                            fit: BoxFit.cover,
                           ),
                   ),
                   Expanded(
@@ -240,6 +273,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       onSaved: (value) {
                         _editedProd = Product(
                           id: _editedProd.id,
+                          isFavorite: _editedProd.isFavorite,
                           title: _editedProd.title,
                           description: _editedProd.description,
                           imageUrl: value!,
